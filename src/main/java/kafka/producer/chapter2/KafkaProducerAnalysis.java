@@ -1,7 +1,5 @@
 package kafka.producer.chapter2;
 
-import kafka.domain.Company;
-import kafka.producer.partitioner.DemoPartitioner;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
 
@@ -10,7 +8,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
- * 生产者客户端示例代码
+ * 生产者客户端
+ * 基础示例代码
  */
 public class KafkaProducerAnalysis {
 
@@ -47,7 +46,14 @@ public class KafkaProducerAnalysis {
         fireAndForget(producer);
 
         // 2. 同步发送方式
+        syncSend1(producer);
+        syncSend2(producer);
 
+        // 3. 异步消息发送
+        asyncSend(producer);
+
+        // 多消息发送
+        sendManyRecord(producer);
     }
 
     /* ProducerRecord发送消息对象的结构：
