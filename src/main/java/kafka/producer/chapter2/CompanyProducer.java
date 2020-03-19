@@ -1,6 +1,7 @@
 package kafka.producer.chapter2;
 
 import kafka.domain.Company;
+import kafka.producer.serializer.CompanySerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -21,7 +22,7 @@ public class CompanyProducer {
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokerList);
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         // 指定value序列化器（自定义的）
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, Company.class.getName());
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, CompanySerializer.class.getName());
         properties.put(ProducerConfig.CLIENT_ID_CONFIG, "producer.client.id.demo");
         return properties;
     }
