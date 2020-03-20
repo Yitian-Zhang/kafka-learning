@@ -10,10 +10,10 @@ import java.util.Properties;
 
 public class MyKafkaProducerConfig {
 
-    public static final String brokerList = "localhost:9092";
-    public static final String topic = "topic-dome";
-
-    public static Properties initBasicConfig() {
+    /**
+     * Producer基础参数配置
+     */
+    public static Properties initBasicConfig(String brokerList) {
         Properties properties = new Properties();
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokerList);
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -22,19 +22,42 @@ public class MyKafkaProducerConfig {
         return properties;
     }
 
-    public static Properties initConfigWithPartitioner() {
-        Properties properties = initBasicConfig();
+    /**
+     * 配置Producer分区器，可以自定义实现数据分区存放逻辑
+     */
+    public static Properties initConfigWithPartitioner(String brokerList) {
+        Properties properties = initBasicConfig(brokerList);
         properties.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, DemoPartitioner.class.getName());
         return properties;
     }
 
     /**
-     * KafkaProducerInterceptor拦截器链
+     * 配置KafkaProducerInterceptor拦截器
      */
-    public static Properties initConfigWithInterceptor() {
-        Properties properties = initBasicConfig();
+    public static Properties initConfigWithInterceptor(String brokerList) {
+        Properties properties = initBasicConfig(brokerList);
+        properties.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, ProducerInterceptorPrefix.class.getName());
+        return properties;
+    }
+
+    /**
+     * 配置ProduerInterceptor连接器链
+     */
+    public static Properties initConfigWithInterceptorChain(String brokerList) {
+        Properties properties = initBasicConfig(brokerList);
         properties.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, ProducerInterceptorPrefix.class.getName() + "," +
                 ProducerInterceptorPrefixPlus.class.getName());
+        return properties;
+    }
+
+    /**
+     * 设置Producer消息发送重试次数
+     * @param brokerList Kafka集群host
+     * @param retries 重试次数
+     */
+    public static Properties initConfigWithRetries(String brokerList, Integer retries) {
+        Properties properties = initBasicConfig(brokerList);
+        properties.put(ProducerConfig.RETRIES_CONFIG, retries);
         return properties;
     }
 }
